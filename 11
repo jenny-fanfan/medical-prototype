@@ -1,0 +1,1588 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>管饲居家管理平台交互原型</title>
+    <style>
+:root {
+  --ink: #172126;
+  --muted: #68757e;
+  --line: #dce8e7;
+  --soft: #eef8f6;
+  --blue: #1e7dd7;
+  --green: #13a98b;
+  --red: #df4b46;
+  --orange: #ef8d28;
+  --bg: #f5f8fa;
+  --card: #ffffff;
+  --shadow: 0 18px 45px rgba(22, 45, 60, .12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: linear-gradient(135deg, #edf7f8 0%, #f7f9fb 45%, #eef4fb 100%);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+.prototype-rail {
+  padding: 24px;
+  border-right: 1px solid var(--line);
+  background: rgba(255, 255, 255, .78);
+  backdrop-filter: blur(16px);
+}
+
+.brand-block {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--blue), var(--green));
+}
+
+.brand-block span,
+.rail-note p,
+.muted {
+  color: var(--muted);
+}
+
+.brand-block span {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+}
+
+.rail-button {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: #fff;
+  text-align: left;
+}
+
+.rail-button.active {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(135deg, #1d77ce, #11a487);
+  box-shadow: var(--shadow);
+}
+
+.rail-note {
+  margin-top: 22px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.prototype-stage {
+  min-width: 0;
+  padding: 26px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.patient-frame {
+  width: 390px;
+  min-height: 844px;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 12px solid #1c2730;
+  border-radius: 34px;
+  background: #f6fafb;
+  box-shadow: var(--shadow);
+}
+
+.phone-top {
+  height: 58px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  padding: 0 18px 12px;
+  color: #fff;
+  background: linear-gradient(135deg, #167bd2, #13a98b);
+}
+
+.phone-top strong {
+  font-size: 18px;
+}
+
+.phone-content {
+  height: 700px;
+  overflow: auto;
+  padding: 14px 14px 88px;
+}
+
+.phone-tabbar {
+  height: 62px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-top: 1px solid var(--line);
+  background: #fff;
+}
+
+.tab-button {
+  border: 0;
+  background: transparent;
+  color: #6f7b83;
+  font-size: 12px;
+}
+
+.tab-button.active {
+  color: var(--green);
+  font-weight: 700;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.page-title h1,
+.page-title h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.card {
+  margin-bottom: 12px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+}
+
+.patient-frame .card {
+  box-shadow: 0 8px 20px rgba(40, 70, 80, .06);
+}
+
+.card.clickable:hover,
+.table-row:hover,
+.message-row:hover {
+  border-color: #9fd7cf;
+  background: #f8fffd;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.task-card {
+  min-height: 82px;
+}
+
+.task-card strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge.green {
+  color: #08715f;
+  background: #dff7f1;
+}
+
+.badge.blue {
+  color: #1767b5;
+  background: #e2f0ff;
+}
+
+.badge.orange {
+  color: #9b520b;
+  background: #fff0db;
+}
+
+.badge.red {
+  color: #b3312c;
+  background: #ffe6e4;
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.primary,
+.secondary,
+.danger,
+.ghost {
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-weight: 700;
+}
+
+.primary {
+  color: #fff;
+  background: var(--green);
+}
+
+.secondary {
+  color: var(--blue);
+  border-color: #b9daf7;
+  background: #eef7ff;
+}
+
+.danger {
+  color: #fff;
+  background: var(--red);
+}
+
+.ghost {
+  color: var(--ink);
+  border-color: var(--line);
+  background: #fff;
+}
+
+.full {
+  width: 100%;
+}
+
+.mini {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 13px;
+}
+
+.field {
+  margin-bottom: 12px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 10px;
+  border: 1px solid #cddbdc;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.field textarea {
+  min-height: 82px;
+  resize: vertical;
+}
+
+.field.error input,
+.field.error select,
+.field.error textarea {
+  border-color: var(--red);
+  background: #fff8f8;
+}
+
+.error-text {
+  margin-top: 5px;
+  color: var(--red);
+  font-size: 12px;
+}
+
+.segmented {
+  display: flex;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f2f7f8;
+}
+
+.segmented button {
+  flex: 1;
+  min-height: 34px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+}
+
+.segmented button.active {
+  color: #fff;
+  background: var(--green);
+}
+
+.list {
+  display: grid;
+  gap: 9px;
+}
+
+.list-item {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.list-item-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.progress {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #e4eeee;
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), var(--blue));
+}
+
+.chart {
+  height: 180px;
+  display: flex;
+  align-items: end;
+  gap: 13px;
+  padding: 16px 12px 28px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: repeating-linear-gradient(to top, #fff, #fff 34px, #eef4f5 35px);
+}
+
+.bar {
+  flex: 1;
+  min-width: 18px;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, var(--blue), var(--green));
+  position: relative;
+}
+
+.bar::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 50%;
+  bottom: -23px;
+  transform: translateX(-50%);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.doctor-frame {
+  min-height: calc(100vh - 52px);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.doctor-shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: calc(100vh - 54px);
+}
+
+.doctor-nav {
+  padding: 18px;
+  border-right: 1px solid var(--line);
+  background: #f7fbfb;
+}
+
+.doctor-nav h2 {
+  margin: 0 0 18px;
+  font-size: 18px;
+}
+
+.nav-item {
+  width: 100%;
+  margin-bottom: 7px;
+  padding: 11px 12px;
+  border: 0;
+  border-radius: 8px;
+  color: #4d5d66;
+  background: transparent;
+  text-align: left;
+}
+
+.nav-item.active {
+  color: #fff;
+  background: #1e7dd7;
+}
+
+.doctor-main {
+  min-width: 0;
+  background: #f6f9fb;
+}
+
+.doctor-topbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 22px;
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+
+.doctor-content {
+  padding: 20px;
+}
+
+.metric-card {
+  min-height: 116px;
+}
+
+.metric-card strong {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.metric-card span {
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.toolbar input,
+.toolbar select {
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid #cddbdc;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.table {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.table-head,
+.table-row {
+  display: grid;
+  grid-template-columns: 1.2fr .7fr .7fr 1fr .8fr .8fr 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 13px 14px;
+}
+
+.table-head {
+  color: var(--muted);
+  background: #f0f6f7;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.table-row {
+  border-top: 1px solid var(--line);
+}
+
+.message-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  min-height: 590px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.message-list {
+  border-right: 1px solid var(--line);
+}
+
+.message-row {
+  padding: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.chat-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-body {
+  flex: 1;
+  padding: 18px;
+  background: #f7fbfb;
+}
+
+.bubble {
+  max-width: 72%;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.bubble.me {
+  margin-left: auto;
+  color: #fff;
+  background: var(--green);
+}
+
+.chat-input {
+  display: flex;
+  gap: 10px;
+  padding: 14px;
+  border-top: 1px solid var(--line);
+  background: #fff;
+}
+
+.chat-input input {
+  flex: 1;
+  min-height: 42px;
+  padding: 9px 10px;
+  border: 1px solid #cddbdc;
+  border-radius: 8px;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 20;
+  transform: translateX(-50%) translateY(20px);
+  opacity: 0;
+  padding: 12px 18px;
+  border-radius: 8px;
+  color: #fff;
+  background: rgba(20, 34, 42, .92);
+  transition: .2s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(12, 24, 31, .42);
+}
+
+.modal {
+  width: min(560px, 92vw);
+  max-height: 86vh;
+  overflow: auto;
+  padding: 20px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.modal h2 {
+  margin: 0 0 12px;
+}
+
+.toggle {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.switch {
+  width: 46px;
+  height: 26px;
+  padding: 3px;
+  border: 0;
+  border-radius: 99px;
+  background: #c8d7d8;
+}
+
+.switch span {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: .2s;
+}
+
+.switch.on {
+  background: var(--green);
+}
+
+.switch.on span {
+  transform: translateX(20px);
+}
+
+@media (max-width: 980px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .prototype-rail {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .brand-block,
+  .rail-note {
+    grid-column: 1 / -1;
+  }
+
+  .doctor-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .doctor-nav {
+    display: flex;
+    overflow: auto;
+    gap: 8px;
+  }
+
+  .doctor-nav h2 {
+    display: none;
+  }
+
+  .nav-item {
+    white-space: nowrap;
+  }
+}
+
+</style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="prototype-rail">
+        <div class="brand-block">
+          <div class="brand-mark">H</div>
+          <div>
+            <strong>管饲管理平台</strong>
+            <span>交互原型</span>
+          </div>
+        </div>
+        <button class="rail-button active" data-mode="patient">患者端小程序</button>
+        <button class="rail-button" data-mode="doctor">医护端后台</button>
+        <div class="rail-note">
+          <strong>原型说明</strong>
+          <p>主要按钮、卡片、表单、筛选、弹窗、详情和状态流转均已接入交互。</p>
+        </div>
+      </aside>
+
+      <main class="prototype-stage">
+        <section id="patientApp" class="patient-frame"></section>
+        <section id="doctorApp" class="doctor-frame hidden"></section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <div id="modalRoot"></div>
+
+    <script>
+const state = {
+  mode: "patient",
+  patientTab: "home",
+  patientPage: "home",
+  doctorPage: "workbench",
+  reminderOn: true,
+  managementStatus: "未提交",
+  uploaded: false,
+  activeEval: "营养耐受性",
+  selectedPatient: "王阿姨",
+  reportStatus: "未查看",
+  chatMessages: ["护士您好，今天喂养后有些腹胀。"],
+};
+
+const patientTabs = [
+  ["home", "首页"],
+  ["manage", "自我管理"],
+  ["eval", "评估"],
+  ["knowledge", "知识"],
+  ["mine", "我的"],
+];
+
+const doctorNav = [
+  ["workbench", "工作台"],
+  ["patients", "患者管理"],
+  ["reports", "患者报告"],
+  ["monitor", "监测评估"],
+  ["knowledge", "知识管理"],
+  ["messages", "消息中心"],
+  ["reminders", "智能提醒"],
+  ["history", "历史患者"],
+  ["settings", "系统设置"],
+];
+
+const patients = [
+  ["王阿姨", "女", "68", "张护士", "鼻胃管", "中风险", "在管"],
+  ["李先生", "男", "73", "刘医生", "胃造瘘", "高风险", "在管"],
+  ["赵女士", "女", "59", "陈护士", "鼻肠管", "低风险", "待复评"],
+];
+
+const reports = [
+  ["王阿姨", "张护士", "今日 08:42", "日常管理", "中风险", "未查看"],
+  ["李先生", "刘医生", "今日 09:16", "紧急上报", "紧急", "处理中"],
+  ["赵女士", "陈护士", "昨日 18:30", "异常上报", "高风险", "已反馈"],
+];
+
+function $(selector) {
+  return document.querySelector(selector);
+}
+
+function showToast(text) {
+  const toast = $("#toast");
+  toast.textContent = text;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 1800);
+}
+
+function badge(text) {
+  const cls = text.includes("紧急") || text.includes("高") || text.includes("未") ? "red" :
+    text.includes("中") || text.includes("待") || text.includes("处理") ? "orange" :
+    text.includes("低") || text.includes("完成") || text.includes("已") || text.includes("在管") ? "green" : "blue";
+  return `<span class="badge ${cls}">${text}</span>`;
+}
+
+function openModal(title, body, actions = "") {
+  $("#modalRoot").innerHTML = `
+    <div class="modal-backdrop" onclick="closeModal(event)">
+      <div class="modal" onclick="event.stopPropagation()">
+        <h2>${title}</h2>
+        ${body}
+        <div class="button-row" style="margin-top:16px;justify-content:flex-end">
+          ${actions || '<button class="primary" onclick="closeModal()">知道了</button>'}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function closeModal(event) {
+  if (!event || event.target.classList.contains("modal-backdrop") || event.target.tagName === "BUTTON") {
+    $("#modalRoot").innerHTML = "";
+  }
+}
+
+function setMode(mode) {
+  state.mode = mode;
+  document.querySelectorAll(".rail-button").forEach((button) => {
+    button.classList.toggle("active", button.dataset.mode === mode);
+  });
+  $("#patientApp").classList.toggle("hidden", mode !== "patient");
+  $("#doctorApp").classList.toggle("hidden", mode !== "doctor");
+}
+
+function patientShell(content, title = "患者端") {
+  return `
+    <div class="phone-top">
+      <strong>${title}</strong>
+      <button class="ghost mini" onclick="patientGo('messages')">消息</button>
+    </div>
+    <div class="phone-content">${content}</div>
+    <div class="phone-tabbar">
+      ${patientTabs.map(([id, label]) => `
+        <button class="tab-button ${state.patientTab === id ? "active" : ""}" onclick="patientTab('${id}')">
+          <div>${label}</div>
+        </button>
+      `).join("")}
+    </div>
+  `;
+}
+
+function patientTab(tab) {
+  state.patientTab = tab;
+  state.patientPage = tab === "home" ? "home" : tab;
+  renderPatient();
+}
+
+function patientGo(page) {
+  const tabMap = { home: "home", manage: "manage", eval: "eval", knowledge: "knowledge", mine: "mine" };
+  state.patientTab = tabMap[page] || state.patientTab;
+  state.patientPage = page;
+  renderPatient();
+}
+
+function patientBack() {
+  const parent = {
+    login: "home", profile1: "login", profile2: "profile1", reminder: "manage",
+    dailyForm: "manage", abnormal: "manage", emergency: "home", history: "manage",
+    recordDetail: "history", evalForm: "eval", evalResult: "eval", trend: "eval",
+    knowledgeDetail: "knowledge", quiz: "knowledgeDetail", messages: "home",
+    chat: "messages", profileEdit: "mine", points: "mine", ranking: "mine", settings: "mine",
+  };
+  patientGo(parent[state.patientPage] || "home");
+}
+
+function renderPatient() {
+  const page = state.patientPage;
+  let content = "";
+  let title = "患者端";
+  if (page === "login") content = patientLogin();
+  else if (page === "profile1") content = profileOne();
+  else if (page === "profile2") content = profileTwo();
+  else if (page === "home") content = patientHome();
+  else if (page === "manage") content = manageHome();
+  else if (page === "reminder") content = reminderPage();
+  else if (page === "dailyForm") content = dailyForm();
+  else if (page === "abnormal") content = abnormalPage();
+  else if (page === "emergency") content = emergencyPage();
+  else if (page === "history") content = historyPage();
+  else if (page === "recordDetail") content = recordDetail();
+  else if (page === "eval") content = evalHome();
+  else if (page === "evalForm") content = evalForm();
+  else if (page === "evalResult") content = evalResult();
+  else if (page === "trend") content = trendPage();
+  else if (page === "knowledge") content = knowledgeHome();
+  else if (page === "knowledgeDetail") content = knowledgeDetail();
+  else if (page === "quiz") content = quizPage();
+  else if (page === "messages") content = messagesPage();
+  else if (page === "chat") content = patientChat();
+  else if (page === "mine") content = minePage();
+  else if (page === "profileEdit") content = profileEdit();
+  else if (page === "points") content = pointsPage();
+  else if (page === "ranking") content = rankingPage();
+  else if (page === "settings") content = settingsPage();
+  $("#patientApp").innerHTML = patientShell(content, title);
+}
+
+function backTitle(text) {
+  return `<div class="page-title"><button class="ghost mini" onclick="patientBack()">返回</button><h2>${text}</h2><span></span></div>`;
+}
+
+function patientLogin() {
+  return `
+    <div class="card" style="margin-top:80px;text-align:center">
+      <h1>管饲居家管理</h1>
+      <p class="muted">用于每日管理、异常上报、医护咨询和知识学习。</p>
+      <button class="primary full" onclick="patientGo('profile1')">微信一键登录</button>
+    </div>
+  `;
+}
+
+function profileOne() {
+  return `${backTitle("一般资料")}
+    <div class="card">
+      ${field("姓名", "王桂兰")}
+      ${field("性别", "女", "select", ["女", "男"])}
+      ${field("年龄", "68")}
+      ${field("联系电话", "138 0000 1024")}
+      ${field("照护者姓名", "王小敏")}
+      ${field("照护者电话", "139 0000 2048")}
+      ${field("基础疾病", "脑卒中后吞咽障碍")}
+      <div class="button-row"><button class="secondary" onclick="showToast('已暂存')">暂存</button><button class="primary" onclick="patientGo('profile2')">下一步</button></div>
+    </div>`;
+}
+
+function profileTwo() {
+  return `${backTitle("管饲资料")}
+    <div class="card">
+      ${field("管饲方式", "鼻胃管", "select", ["鼻胃管", "鼻肠管", "胃造瘘"])}
+      ${field("置管日期", "2026-05-18")}
+      ${field("喂养配方", "整蛋白型肠内营养制剂")}
+      ${field("每日喂养次数", "5")}
+      ${field("每次喂养量", "250ml")}
+      ${field("换管周期", "4周")}
+      <div class="button-row"><button class="ghost" onclick="patientGo('profile1')">上一步</button><button class="primary" onclick="showToast('资料已同步至医护端');patientGo('home')">完成并同步</button></div>
+    </div>`;
+}
+
+function patientHome() {
+  return `
+    <div class="page-title"><h1>早上好，王阿姨</h1>${badge("今日待完成")}</div>
+    <div class="card">
+      <strong>今日待办</strong>
+      <div class="grid-2" style="margin-top:12px">
+        ${task("日常管理", state.managementStatus, "dailyForm")}
+        ${task("每周知识", "可获得 10 分", "knowledgeDetail")}
+        ${task("定期评估", "营养状况待评", "evalForm")}
+        ${task("喂养提醒", "12:00 下一次", "reminder")}
+      </div>
+    </div>
+    <div class="card clickable" onclick="patientGo('recordDetail')">
+      <div class="list-item-title"><span>健康状态</span>${badge("中风险")}</div>
+      <p class="muted">最近记录：轻度腹胀，管道通畅。医护建议少量多次观察。</p>
+    </div>
+    <div class="button-row">
+      <button class="danger full" onclick="patientGo('emergency')">紧急情况上报</button>
+      <button class="secondary full" onclick="patientGo('chat')">联系医护</button>
+    </div>
+    <div class="card clickable" onclick="patientGo('points')">
+      <div class="list-item-title"><span>本周积分</span><strong>86</strong></div>
+      <div class="progress"><span style="width:72%"></span></div>
+    </div>
+    <div class="card clickable" onclick="patientGo('messages')">
+      <strong>智能提醒</strong>
+      <p class="muted">20:00 前完成日常管理记录；周五完成生活质量评估。</p>
+    </div>
+  `;
+}
+
+function task(title, desc, page) {
+  return `<div class="card task-card clickable" onclick="patientGo('${page}')"><strong>${title}</strong><span class="muted">${desc}</span></div>`;
+}
+
+function manageHome() {
+  return `
+    <div class="page-title"><h1>自我管理</h1>${badge(state.managementStatus)}</div>
+    ${simpleCard("日常管理记录", "每日提交 1 次，可暂存后继续填写", "dailyForm")}
+    ${simpleCard("提醒设置", "喂养、给药、换管提醒", "reminder")}
+    ${simpleCard("异常/并发症上报", "呕吐、腹泻、堵管、脱管等及时上报", "abnormal")}
+    ${simpleCard("历史记录", "查看日常管理、异常和紧急上报", "history")}
+    <button class="danger full" onclick="patientGo('emergency')">紧急情况上报</button>
+  `;
+}
+
+function reminderPage() {
+  return `${backTitle("提醒设置")}
+    <div class="card">
+      <div class="segmented"><button class="active">喂养</button><button onclick="showToast('已切换到给药提醒')">给药</button><button onclick="showToast('已切换到换管提醒')">换管</button></div>
+      <div class="field toggle" style="margin-top:14px"><strong>启用提醒</strong><button class="switch ${state.reminderOn ? "on" : ""}" onclick="state.reminderOn=!state.reminderOn;renderPatient()"><span></span></button></div>
+      <div style="${state.reminderOn ? "" : "opacity:.45;pointer-events:none"}">
+        ${field("提醒时间", "08:00 / 12:00 / 18:00")}
+        ${field("频率", "每日", "select", ["每日", "隔日", "每周"])}
+        ${field("备注", "喂养前确认体位抬高 30 度")}
+      </div>
+      <button class="primary full" onclick="showToast('提醒已更新');patientBack()">保存设置</button>
+    </div>`;
+}
+
+function dailyForm() {
+  return `${backTitle("每日管理")}
+    <div class="card">
+      <h3>今日喂养情况</h3>
+      ${field("是否按计划喂养", "是", "select", ["是", "否"])}
+      ${field("实际喂养次数", "5")}
+      ${field("每次喂养量", "250ml")}
+      ${field("不适症状", "轻度腹胀", "select", ["无", "轻度腹胀", "呕吐", "腹泻", "便秘"])}
+      <h3>管道与皮肤</h3>
+      ${field("管道是否通畅", "通畅", "select", ["通畅", "堵管", "脱管", "渗漏"])}
+      ${field("置管周围皮肤", "无红肿", "select", ["无红肿", "红肿", "渗液", "疼痛"])}
+      ${field("体温", "36.8")}
+      ${field("备注", "喂养后已保持半卧位 40 分钟", "textarea")}
+      <button class="secondary full" onclick="state.managementStatus='已暂存';showToast('已暂存');patientGo('manage')">暂存</button>
+      <button class="primary full" style="margin-top:10px" onclick="state.managementStatus='已提交';openModal('提交成功','<p>日常管理记录已提交，获得 5 积分。</p><p class=muted>如症状加重，请及时进行异常上报。</p>','<button class=primary onclick=&quot;closeModal();patientGo(\\'manage\\')&quot;>完成</button>')">提交</button>
+    </div>`;
+}
+
+function abnormalPage() {
+  return `${backTitle("异常上报")}
+    <div class="card">
+      ${field("异常类型", "腹胀", "select", ["呕吐", "腹泻", "腹胀", "堵管", "脱管", "渗漏", "发热", "疑似误吸", "其他"])}
+      ${field("发生时间", "2026-06-06 09:20")}
+      ${field("严重程度", "中度", "select", ["轻度", "中度", "重度"])}
+      ${field("情况描述", "早餐后腹胀明显，暂无呕吐。", "textarea")}
+      ${uploadBox()}
+      <button class="primary full" onclick="openModal('上报成功','<p>异常情况已发送至医护端，医护人员查看后会反馈处理建议。</p>','<button class=primary onclick=&quot;closeModal();patientGo(\\'history\\')&quot;>查看记录</button>')">提交上报</button>
+    </div>`;
+}
+
+function emergencyPage() {
+  return `${backTitle("紧急上报")}
+    <div class="card" style="border-color:#ffc8c5;background:#fff8f7">
+      <h3>请选择紧急情况</h3>
+      <div class="grid-2">
+        ${["呼吸困难", "疑似误吸", "管道脱落", "大量出血", "高热不退", "意识异常"].map((x) => `<button class="ghost" onclick="showToast('已选择：${x}')">${x}</button>`).join("")}
+      </div>
+      ${field("当前情况描述", "疑似误吸，咳嗽明显", "textarea")}
+      ${field("联系电话", "138 0000 1024")}
+      ${uploadBox()}
+      <button class="danger full" onclick="openModal('确认紧急上报','<p>该信息会立即提醒医护端处理。请确认当前联系电话保持畅通。</p>','<button class=ghost onclick=closeModal()>取消</button><button class=danger onclick=&quot;closeModal();showToast(\\'紧急上报已发送\\');patientGo(\\'messages\\')&quot;>确认上报</button>')">立即上报医护</button>
+      <button class="secondary full" style="margin-top:10px" onclick="openModal('拨打紧急电话','<p>是否拨打 120 或当地急救电话？</p>','<button class=ghost onclick=closeModal()>取消</button><button class=danger onclick=&quot;closeModal();showToast(\\'正在发起拨号\\')&quot;>确认拨打</button>')">拨打紧急电话</button>
+    </div>`;
+}
+
+function historyPage() {
+  return `${backTitle("历史记录")}
+    <div class="segmented" style="margin-bottom:12px"><button class="active">日常</button><button>异常</button><button>紧急</button></div>
+    <div class="list">
+      ${["今日 09:10 日常管理", "昨日 20:02 异常上报", "06-01 定期记录"].map((x, i) => `<div class="list-item clickable" onclick="patientGo('recordDetail')"><div class="list-item-title"><span>${x}</span>${badge(i === 1 ? "已反馈" : "医护已查看")}</div><p class="muted">点击查看提交内容和医护建议</p></div>`).join("")}
+    </div>`;
+}
+
+function recordDetail() {
+  return `${backTitle("记录详情")}
+    <div class="card">
+      <div class="list-item-title"><span>日常管理记录</span>${badge("已反馈")}</div>
+      <p>提交时间：2026-06-06 09:10</p>
+      <p>症状：轻度腹胀，管道通畅，无渗漏。</p>
+      <p>医护反馈：今日建议少量多次喂养，观察腹胀变化，若出现呕吐请上报。</p>
+      <button class="secondary full" onclick="patientGo('chat')">继续咨询医护</button>
+    </div>`;
+}
+
+function evalHome() {
+  return `
+    <div class="page-title"><h1>定期评估</h1>${badge("1 项待完成")}</div>
+    ${simpleCard("营养状况评估", "预计 3 分钟，完成可获 8 积分", "evalForm")}
+    ${simpleCard("最近评估结果", "误吸风险：中风险，得分 64", "evalResult")}
+    ${simpleCard("趋势图", "查看历次评估得分变化", "trend")}
+    ${simpleCard("历史评估", "营养耐受性、生活质量等记录", "trend")}
+  `;
+}
+
+function evalForm() {
+  return `${backTitle("营养状况评估")}
+    <div class="card">
+      <div class="progress"><span style="width:60%"></span></div>
+      ${field("近一周体重变化", "无明显下降", "select", ["无明显下降", "下降 1-2kg", "下降超过 2kg"])}
+      ${field("每日摄入完成度", "80%-100%", "select", ["低于 60%", "60%-80%", "80%-100%"])}
+      ${field("活动能力评分", "3", "select", ["1", "2", "3", "4", "5"])}
+      <button class="secondary full" onclick="showToast('评估已暂存')">暂存</button>
+      <button class="primary full" style="margin-top:10px" onclick="patientGo('evalResult')">提交评估</button>
+    </div>`;
+}
+
+function evalResult() {
+  return `${backTitle("评估结果")}
+    <div class="card">
+      <div class="list-item-title"><span>营养状况评估</span>${badge("中风险")}</div>
+      <h1>72 分</h1>
+      <p class="muted">建议保持当前喂养计划，关注体重和腹胀变化。</p>
+      <button class="primary full" onclick="patientGo('trend')">查看趋势图</button>
+    </div>`;
+}
+
+function trendPage() {
+  return `${backTitle("趋势图")}
+    <div class="card">
+      <div class="segmented"><button class="active">营养</button><button>误吸</button><button>生活质量</button></div>
+      ${chart()}
+      <button class="secondary full" onclick="showToast('趋势图已生成，可保存')">导出趋势图</button>
+    </div>`;
+}
+
+function knowledgeHome() {
+  return `
+    <div class="page-title"><h1>知识学习</h1>${badge("本周 60%")}</div>
+    ${simpleCard("本周推送：管饲喂养前后注意事项", "含视频 4 分钟，完成可获 10 积分", "knowledgeDetail")}
+    <div class="card">
+      <strong>知识库分类</strong>
+      <div class="grid-2" style="margin-top:12px">
+        ${["管饲基础", "喂养注意", "给药注意", "管道护理", "并发症识别", "居家安全"].map((x) => `<button class="ghost" onclick="patientGo('knowledgeDetail')">${x}</button>`).join("")}
+      </div>
+    </div>`;
+}
+
+function knowledgeDetail() {
+  return `${backTitle("知识详情")}
+    <div class="card">
+      <h3>管饲喂养前后注意事项</h3>
+      <div class="card" style="background:#eef8f6;text-align:center">视频/图文内容区域</div>
+      <p>喂养前确认管道位置，保持半卧位；喂养后继续保持体位 30-60 分钟。</p>
+      <button class="primary full" onclick="showToast('学习完成，积分已到账')">完成学习</button>
+      <button class="secondary full" style="margin-top:10px" onclick="patientGo('quiz')">进入小测验</button>
+    </div>`;
+}
+
+function quizPage() {
+  return `${backTitle("知识测验")}
+    <div class="card">
+      <p><strong>1/3</strong> 喂养后建议保持半卧位多久？</p>
+      <button class="ghost full" onclick="showToast('回答正确')">30-60 分钟</button>
+      <button class="ghost full" style="margin-top:8px" onclick="showToast('请再想想')">立即平躺</button>
+      <button class="primary full" style="margin-top:14px" onclick="openModal('测验完成','<p>正确率 100%，获得 5 积分。</p>','<button class=primary onclick=&quot;closeModal();patientGo(\\'knowledge\\')&quot;>完成</button>')">提交答案</button>
+    </div>`;
+}
+
+function messagesPage() {
+  return `${backTitle("消息中心")}
+    <div class="list">
+      ${["医护咨询：张护士回复了您", "紧急上报处理通知", "今晚 20:00 前提交日常管理", "本周知识学习提醒"].map((x, i) => `<div class="list-item clickable" onclick="patientGo('${i === 0 ? "chat" : "recordDetail"}')"><div class="list-item-title"><span>${x}</span>${badge(i === 1 ? "紧急" : "未读")}</div><p class="muted">点击查看详情</p></div>`).join("")}
+    </div>`;
+}
+
+function patientChat() {
+  return `${backTitle("医护咨询")}
+    <div class="card">
+      <div class="bubble">您好，请问今天具体腹胀持续了多久？</div>
+      ${state.chatMessages.map((x) => `<div class="bubble me">${x}</div>`).join("")}
+      <div class="button-row"><button class="ghost mini" onclick="showToast('语音已录入')">语音</button><button class="ghost mini" onclick="state.uploaded=true;showToast('图片已上传')">图片</button><button class="ghost mini" onclick="showToast('视频已上传')">视频</button></div>
+      <div class="chat-input" style="padding:10px 0 0;border:0"><input id="patientChatInput" placeholder="输入想咨询的问题" /><button class="primary" onclick="sendPatientChat()">发送</button></div>
+    </div>`;
+}
+
+function minePage() {
+  return `
+    <div class="card">
+      <div class="list-item-title"><span>王桂兰</span>${badge("在管")}</div>
+      <p class="muted">责任护士：张护士，当前积分 286</p>
+    </div>
+    ${simpleCard("我的资料", "一般资料和管饲资料", "profileEdit")}
+    ${simpleCard("积分明细", "查看积分来源和到账记录", "points")}
+    ${simpleCard("积分排行榜", "查看周榜/月榜排名", "ranking")}
+    ${simpleCard("设置", "提醒、授权、退出登录", "settings")}
+  `;
+}
+
+function profileEdit() {
+  return `${backTitle("资料编辑")}
+    <div class="card">
+      ${field("姓名", "王桂兰")}
+      ${field("管道类型", "鼻胃管")}
+      ${field("喂养方案", "每日 5 次，每次 250ml")}
+      <button class="primary full" onclick="showToast('资料已更新并同步医护端');patientGo('mine')">保存并同步医护端</button>
+    </div>`;
+}
+
+function pointsPage() {
+  return `${backTitle("积分明细")}
+    <div class="card"><h1>286 分</h1><p class="muted">本周获得 86 分</p></div>
+    <div class="list">${["提交日常管理 +5", "完成知识学习 +10", "完成定期评估 +8", "及时异常上报 +6"].map((x) => `<div class="list-item">${x}</div>`).join("")}</div>`;
+}
+
+function rankingPage() {
+  return `${backTitle("积分排行榜")}
+    <div class="segmented" style="margin-bottom:12px"><button class="active">周榜</button><button onclick="showToast('已切换月榜')">月榜</button></div>
+    <div class="list">${["1. 李先生 318", "2. 王桂兰 286", "3. 赵女士 260"].map((x) => `<div class="list-item">${x}</div>`).join("")}</div>`;
+}
+
+function settingsPage() {
+  return `${backTitle("设置")}
+    <div class="card">
+      <div class="field toggle"><strong>消息提醒</strong><button class="switch on" onclick="this.classList.toggle('on')"><span></span></button></div>
+      <button class="ghost full" onclick="showToast('隐私授权已打开')">隐私授权</button>
+      <button class="ghost full" style="margin-top:10px" onclick="showToast('缓存已清除')">清除缓存</button>
+      <button class="danger full" style="margin-top:10px" onclick="openModal('退出登录','<p>确认退出当前账号？</p>','<button class=ghost onclick=closeModal()>取消</button><button class=danger onclick=&quot;closeModal();patientGo(\\'login\\')&quot;>退出</button>')">退出登录</button>
+    </div>`;
+}
+
+function simpleCard(title, desc, page) {
+  return `<div class="card clickable" onclick="patientGo('${page}')"><div class="list-item-title"><span>${title}</span><span>></span></div><p class="muted">${desc}</p></div>`;
+}
+
+function field(label, value = "", type = "text", options = []) {
+  if (type === "select") {
+    return `<div class="field"><label>${label}</label><select>${options.map((option) => `<option ${option === value ? "selected" : ""}>${option}</option>`).join("")}</select></div>`;
+  }
+  if (type === "textarea") {
+    return `<div class="field"><label>${label}</label><textarea>${value}</textarea></div>`;
+  }
+  return `<div class="field"><label>${label}</label><input value="${value}" /></div>`;
+}
+
+function uploadBox() {
+  const removeButton = state.uploaded
+    ? `<button class="ghost mini" onclick="removeUpload()">删除</button>`
+    : "";
+  return `<div class="card" style="background:#f7fbfb"><div class="list-item-title"><span>附件上传</span>${state.uploaded ? badge("已上传") : badge("未上传")}</div><button class="secondary mini" onclick="state.uploaded=true;showToast('附件上传成功');renderPatient()">上传图片/视频</button>${removeButton}</div>`;
+}
+
+function removeUpload() {
+  state.uploaded = false;
+  showToast("已删除附件");
+  renderPatient();
+}
+
+function chart() {
+  return `<div class="chart">
+    ${[55, 62, 58, 72, 76].map((h, i) => `<div class="bar" data-label="${i + 1}月" style="height:${h}%"></div>`).join("")}
+  </div>`;
+}
+
+function sendPatientChat() {
+  const input = $("#patientChatInput");
+  if (!input.value.trim()) {
+    showToast("请输入咨询内容");
+    return;
+  }
+  state.chatMessages.push(input.value.trim());
+  showToast("已发送");
+  renderPatient();
+}
+
+function doctorShell(content) {
+  return `
+    <div class="doctor-shell">
+      <aside class="doctor-nav">
+        <h2>医护端后台</h2>
+        ${doctorNav.map(([id, label]) => `<button class="nav-item ${state.doctorPage === id ? "active" : ""}" onclick="doctorGo('${id}')">${label}</button>`).join("")}
+      </aside>
+      <main class="doctor-main">
+        <div class="doctor-topbar">
+          <strong>${doctorNav.find(([id]) => id === state.doctorPage)?.[1] || "工作台"}</strong>
+          <div class="button-row">
+            <input placeholder="搜索患者/报告" />
+            <button class="danger mini" onclick="doctorGo('messages')">紧急提醒 1</button>
+            <span class="muted">张护士</span>
+          </div>
+        </div>
+        <div class="doctor-content">${content}</div>
+      </main>
+    </div>
+  `;
+}
+
+function doctorGo(page) {
+  state.doctorPage = page;
+  renderDoctor();
+}
+
+function renderDoctor() {
+  const page = state.doctorPage;
+  let content = "";
+  if (page === "workbench") content = doctorWorkbench();
+  else if (page === "patients") content = doctorPatients();
+  else if (page === "reports") content = doctorReports();
+  else if (page === "monitor") content = doctorMonitor();
+  else if (page === "knowledge") content = doctorKnowledge();
+  else if (page === "messages") content = doctorMessages();
+  else if (page === "reminders") content = doctorReminders();
+  else if (page === "history") content = doctorHistory();
+  else if (page === "settings") content = doctorSettings();
+  $("#doctorApp").innerHTML = doctorShell(content);
+}
+
+function doctorWorkbench() {
+  return `
+    <div class="grid-3">
+      ${metric("今日待处理报告", "12", "reports")}
+      ${metric("紧急上报", "1", "messages")}
+      ${metric("待评估患者", "8", "monitor")}
+    </div>
+    <div class="grid-3">
+      ${metric("患者咨询未回复", "5", "messages")}
+      ${metric("知识完成率", "78%", "knowledge")}
+      ${metric("高风险患者", "3", "patients")}
+    </div>
+    <div class="card">
+      <div class="list-item-title"><strong>近期异常趋势</strong><button class="secondary mini" onclick="doctorGo('monitor')">查看评估</button></div>
+      ${chart()}
+    </div>
+    <div class="button-row">
+      <button class="primary" onclick="openPatientEditor()">新增患者</button>
+      <button class="danger" onclick="doctorGo('messages')">处理紧急上报</button>
+      <button class="secondary" onclick="doctorGo('knowledge')">发布知识推送</button>
+      <button class="ghost" onclick="doctorGo('reminders')">设置提醒</button>
+    </div>
+  `;
+}
+
+function metric(title, number, page) {
+  return `<div class="card metric-card clickable" onclick="doctorGo('${page}')"><strong>${title}</strong><span>${number}</span></div>`;
+}
+
+function doctorPatients() {
+  return `
+    <div class="toolbar">
+      <input placeholder="患者姓名" />
+      <select><option>全部医护端</option><option>张护士</option><option>刘医生</option></select>
+      <select><option>全部风险</option><option>高风险</option><option>中风险</option></select>
+      <button class="primary" onclick="openPatientEditor()">新增患者</button>
+      <button class="secondary" onclick="openTransferIn()">接收转入</button>
+    </div>
+    ${patientTable(patients)}
+  `;
+}
+
+function patientTable(rows) {
+  return `<div class="table">
+    <div class="table-head"><span>姓名</span><span>性别</span><span>年龄</span><span>在管医护</span><span>方式</span><span>风险</span><span>操作</span></div>
+    ${rows.map((row) => `<div class="table-row" onclick="openPatientDetail('${row[0]}')">
+      <span>${row[0]}</span><span>${row[1]}</span><span>${row[2]}</span><span>${row[3]}</span><span>${row[4]}</span><span>${badge(row[5])}</span>
+      <span><button class="secondary mini" onclick="event.stopPropagation();openPatientEditor('${row[0]}')">编辑</button> <button class="ghost mini" onclick="event.stopPropagation();openTransferOut('${row[0]}')">转出</button></span>
+    </div>`).join("")}
+  </div>`;
+}
+
+function doctorReports() {
+  return `
+    <div class="toolbar">
+      <input placeholder="患者姓名" />
+      <select><option>提交类别</option><option>日常管理</option><option>异常上报</option><option>紧急上报</option></select>
+      <select><option>处理状态</option><option>未查看</option><option>处理中</option><option>已反馈</option></select>
+      <button class="secondary" onclick="showToast('筛选已应用')">筛选</button>
+    </div>
+    <div class="table">
+      <div class="table-head"><span>患者</span><span>医护端</span><span>日期</span><span>类别</span><span>风险</span><span>状态</span><span>操作</span></div>
+      ${reports.map((row) => `<div class="table-row" onclick="openReport('${row[0]}','${row[3]}')">
+        <span>${row[0]}</span><span>${row[1]}</span><span>${row[2]}</span><span>${row[3]}</span><span>${badge(row[4])}</span><span>${badge(row[5])}</span>
+        <span><button class="primary mini" onclick="event.stopPropagation();openHandleReport('${row[0]}')">处理</button></span>
+      </div>`).join("")}
+    </div>
+  `;
+}
+
+function doctorMonitor() {
+  return `
+    <div class="toolbar">
+      <input placeholder="患者姓名" />
+      <select><option>评估项目</option><option>肠内营养耐受性</option><option>误吸风险</option><option>营养状况</option><option>生活质量</option></select>
+      <button class="primary" onclick="openEvalEditor()">新增评估</button>
+      <button class="secondary" onclick="showToast('趋势图已导出')">导出趋势图</button>
+    </div>
+    <div class="grid-2">
+      <div class="card"><strong>评估趋势图</strong>${chart()}</div>
+      <div class="card"><strong>不良事件处理</strong><div class="list" style="margin-top:12px">${["堵管处理完成", "疑似误吸处理中", "腹泻已反馈"].map((x) => `<div class="list-item">${x} ${badge(x.includes("处理") ? "处理中" : "已完成")}</div>`).join("")}</div></div>
+    </div>
+    ${patientTable(patients)}
+  `;
+}
+
+function doctorKnowledge() {
+  return `
+    <div class="grid-3">
+      ${metric("本周推送计划", "3", "knowledge")}
+      ${metric("知识库内容", "48", "knowledge")}
+      ${metric("学习完成率", "78%", "knowledge")}
+    </div>
+    <div class="toolbar">
+      <button class="primary" onclick="openKnowledgeEditor()">新增知识</button>
+      <button class="secondary" onclick="openPushPlan()">新增推送计划</button>
+      <button class="ghost" onclick="showToast('学习数据已导出')">导出数据</button>
+    </div>
+    <div class="table">
+      <div class="table-head"><span>标题</span><span>分类</span><span>类型</span><span>更新</span><span>状态</span><span>学习</span><span>操作</span></div>
+      ${["管饲喂养前后注意事项", "堵管的识别与处理", "居家管道固定方法"].map((title, i) => `<div class="table-row">
+        <span>${title}</span><span>管道护理</span><span>${i === 0 ? "视频" : "图文"}</span><span>06-06</span><span>${badge(i === 2 ? "草稿" : "已发布")}</span><span>${72 + i * 6}%</span>
+        <span><button class="secondary mini" onclick="openKnowledgeEditor()">编辑</button> <button class="ghost mini" onclick="confirmDelete()">删除</button></span>
+      </div>`).join("")}
+    </div>
+  `;
+}
+
+function doctorMessages() {
+  return `
+    <div class="message-layout">
+      <div class="message-list">
+        ${["李先生 紧急上报", "王阿姨 患者咨询", "陈护士 医护协作", "转入提醒 赵女士"].map((x, i) => `<div class="message-row" onclick="showToast('已切换会话')"><div class="list-item-title"><span>${x}</span>${badge(i === 0 ? "紧急" : "未读")}</div><p class="muted">${i === 0 ? "疑似误吸，需立即处理" : "点击查看消息"}</p></div>`).join("")}
+      </div>
+      <div class="chat-panel">
+        <div class="chat-body">
+          <div class="bubble">患者：疑似误吸，咳嗽明显。</div>
+          <div class="bubble me">已收到，请保持半卧位，我马上联系您。</div>
+          <div class="card">
+            <strong>患者资料侧栏</strong>
+            <p>李先生，73 岁，胃造瘘，高风险。</p>
+            <button class="danger mini" onclick="openEmergencyHandle()">填写紧急处理结果</button>
+          </div>
+        </div>
+        <div class="chat-input"><input id="doctorChatInput" placeholder="输入回复或处理建议" /><button class="primary" onclick="sendDoctorChat()">发送</button><button class="ghost" onclick="showToast('常用回复已填入')">常用回复</button></div>
+      </div>
+    </div>
+  `;
+}
+
+function doctorReminders() {
+  return `
+    <div class="card">
+      ${settingRow("患者日常管理提醒", "每日 20:00")}
+      ${settingRow("知识推送提醒", "每周一 09:00")}
+      ${settingRow("定期评估提醒", "每月 1 日 10:00")}
+      ${settingRow("异常报告查看提醒", "每日 08:30 / 17:30")}
+      ${settingRow("紧急上报提醒方式", "弹窗 + 声音 + 站内信")}
+      <button class="primary" onclick="showToast('智能提醒设置已保存')">保存设置</button>
+    </div>
+  `;
+}
+
+function settingRow(title, value) {
+  return `<div class="field toggle"><div><strong>${title}</strong><p class="muted">${value}</p></div><button class="switch on" onclick="this.classList.toggle('on')"><span></span></button></div>`;
+}
+
+function doctorHistory() {
+  return `
+    <div class="toolbar"><input placeholder="患者姓名" /><select><option>转出日期</option></select><select><option>再入院状态</option></select></div>
+    ${patientTable([["周先生", "男", "76", "原张护士", "鼻胃管", "中风险", "历史患者"]])}
+  `;
+}
+
+function doctorSettings() {
+  return `
+    <div class="card">
+      ${field("姓名", "张护士")}
+      ${field("角色", "责任护士", "select", ["责任护士", "医生", "营养师", "管理员"])}
+      ${field("通知方式", "站内信 + 短信")}
+      <button class="primary" onclick="showToast('设置已保存')">保存设置</button>
+      <button class="danger" onclick="openModal('退出登录','<p>确认退出医护端？</p>','<button class=ghost onclick=closeModal()>取消</button><button class=danger onclick=&quot;closeModal();showToast(\\'已退出\\')&quot;>退出</button>')">退出登录</button>
+    </div>`;
+}
+
+function openPatientDetail(name) {
+  openModal(`${name} 患者详情`, `
+    <div class="segmented"><button class="active">基本资料</button><button>日常记录</button><button>评估结果</button><button>医护沟通</button></div>
+    <p>年龄：68 岁；管饲方式：鼻胃管；风险等级：中风险；责任医护：张护士。</p>
+    <p>最近记录：今日 09:10 提交日常管理，轻度腹胀。</p>
+    <div class="button-row"><button class="secondary" onclick="openPatientEditor('${name}')">编辑资料</button><button class="primary" onclick="doctorGo('messages');closeModal()">联系患者</button></div>
+  `);
+}
+
+function openPatientEditor(name = "新增患者") {
+  openModal(name === "新增患者" ? "新增患者" : `${name} 资料编辑`, `
+    ${field("姓名", name === "新增患者" ? "" : name)}
+    ${field("联系电话", "138 0000 1024")}
+    ${field("基础疾病", "脑卒中后吞咽障碍")}
+    ${field("管饲方式", "鼻胃管", "select", ["鼻胃管", "鼻肠管", "胃造瘘"])}
+    ${field("喂养方案", "每日 5 次，每次 250ml")}
+  `, `<button class="ghost" onclick="closeModal()">取消</button><button class="primary" onclick="closeModal();showToast('已保存并同步患者端')">保存</button>`);
+}
+
+function openTransferOut(name) {
+  openModal(`转出患者：${name}`, `
+    ${field("转出至医护端", "刘医生团队", "select", ["刘医生团队", "陈护士团队"])}
+    ${field("转出原因", "患者居住地变更")}
+    ${field("是否非计划再入院", "否", "select", ["否", "是"])}
+    ${field("具体情况说明", "继续居家管饲管理", "textarea")}
+  `, `<button class="ghost" onclick="closeModal()">取消</button><button class="danger" onclick="closeModal();showToast('患者已转出，对方医护端已收到提醒')">确认转出</button>`);
+}
+
+function openTransferIn() {
+  openModal("接收转入患者", `
+    <div class="list-item"><div class="list-item-title"><span>赵女士</span>${badge("待接收")}</div><p>原医护端：陈护士；原因：区域转管。</p></div>
+  `, `<button class="ghost" onclick="closeModal();showToast('已拒绝，需填写原因')">拒绝</button><button class="primary" onclick="closeModal();showToast('已接收转入患者')">接收</button>`);
+}
+
+function openReport(name, type) {
+  openModal(`${type}详情`, `
+    <p>患者：${name}</p>
+    <p>提交内容：早餐后腹胀明显，管道通畅，体温 36.8。</p>
+    <p>附件：图片 1 张，视频 0 个。</p>
+    <p>历史相关记录：近 7 日腹胀 2 次。</p>
+  `, `<button class="secondary" onclick="closeModal();showToast('已标记查看')">标记已查看</button><button class="primary" onclick="openHandleReport('${name}')">处理并反馈</button>`);
+}
+
+function openHandleReport(name) {
+  openModal(`处理反馈：${name}`, `
+    ${field("处理结果", "建议观察，少量多次喂养")}
+    ${field("医护建议", "若出现呕吐、呼吸困难或发热，请立即紧急上报。", "textarea")}
+    ${field("是否需要复评", "是", "select", ["是", "否"])}
+    ${field("下次随访时间", "2026-06-07 09:00")}
+  `, `<button class="ghost" onclick="closeModal()">取消</button><button class="primary" onclick="closeModal();showToast('反馈已同步患者端')">提交反馈</button>`);
+}
+
+function openEvalEditor() {
+  openModal("新增评估", `
+    ${field("患者", "王阿姨", "select", ["王阿姨", "李先生", "赵女士"])}
+    ${field("评估项目", "营养状况", "select", ["肠内营养耐受性", "误吸风险", "营养状况", "生活质量"])}
+    ${field("得分", "72")}
+    ${field("风险等级", "中风险", "select", ["低风险", "中风险", "高风险"])}
+    ${field("医护建议", "维持现有喂养计划，继续观察。", "textarea")}
+  `, `<button class="ghost" onclick="closeModal()">取消</button><button class="primary" onclick="closeModal();showToast('评估结果已同步患者端')">保存评估</button>`);
+}
+
+function openKnowledgeEditor() {
+  openModal("知识内容编辑", `
+    ${field("标题", "管饲喂养前后注意事项")}
+    ${field("分类", "管道护理", "select", ["管饲基础", "喂养注意", "给药注意", "管道护理", "并发症识别"])}
+    ${field("正文内容", "喂养前确认管道位置，喂养后保持半卧位 30-60 分钟。", "textarea")}
+    ${field("是否加入本周推送", "是", "select", ["是", "否"])}
+  `, `<button class="secondary" onclick="closeModal();showToast('草稿已保存')">保存草稿</button><button class="primary" onclick="closeModal();showToast('知识已发布，患者端将收到提醒')">发布</button>`);
+}
+
+function openPushPlan() {
+  openModal("新增推送计划", `
+    ${field("推送内容", "管饲喂养前后注意事项")}
+    ${field("目标患者范围", "全部在管患者", "select", ["全部在管患者", "高风险患者", "指定患者"])}
+    ${field("推送时间", "2026-06-08 09:00")}
+  `, `<button class="ghost" onclick="closeModal()">取消</button><button class="primary" onclick="closeModal();showToast('推送计划已发布')">发布</button>`);
+}
+
+function confirmDelete() {
+  openModal("确认删除", "<p>删除后患者端将无法查看该知识内容。</p>", `<button class="ghost" onclick="closeModal()">取消</button><button class="danger" onclick="closeModal();showToast('已删除')">删除</button>`);
+}
+
+function openEmergencyHandle() {
+  openModal("紧急上报处理", `
+    <p>患者：李先生；类型：疑似误吸；联系电话：139 0000 8820。</p>
+    ${field("处理措施", "电话指导患者保持半卧位，观察呼吸状态。", "textarea")}
+    ${field("处理结果", "已联系患者，建议必要时就医。", "textarea")}
+  `, `<button class="secondary" onclick="closeModal();showToast('已标记处理中')">标记处理中</button><button class="danger" onclick="closeModal();showToast('紧急处理结果已同步患者端')">完成处理</button>`);
+}
+
+function sendDoctorChat() {
+  const input = $("#doctorChatInput");
+  if (!input.value.trim()) {
+    showToast("请输入回复内容");
+    return;
+  }
+  showToast("回复已同步患者端");
+  input.value = "";
+}
+
+document.querySelectorAll(".rail-button").forEach((button) => {
+  button.addEventListener("click", () => setMode(button.dataset.mode));
+});
+
+renderPatient();
+renderDoctor();
+
+</script>
+  </body>
+</html>
